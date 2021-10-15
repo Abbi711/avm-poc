@@ -1,0 +1,213 @@
+#pragma version 5
+txn ApplicationID
+int 0
+==
+bnz main_l28
+txn OnCompletion
+int CloseOut
+==
+bnz main_l27
+txn OnCompletion
+int OptIn
+==
+bnz main_l26
+txn OnCompletion
+int DeleteApplication
+==
+bnz main_l25
+txna ApplicationArgs 0
+byte "P"
+==
+bnz main_l24
+txna ApplicationArgs 0
+byte "C"
+==
+bnz main_l23
+txna ApplicationArgs 0
+byte "O"
+==
+bnz main_l22
+txna ApplicationArgs 0
+byte "X"
+==
+bnz main_l21
+txna ApplicationArgs 0
+byte "M"
+==
+bnz main_l20
+txna ApplicationArgs 0
+byte "W"
+==
+bnz main_l16
+txna ApplicationArgs 0
+byte "F"
+==
+bnz main_l12
+err
+main_l12:
+int 0
+store 0
+int 0
+store 1
+main_l13:
+load 1
+global GroupSize
+<
+bnz main_l15
+byte "FeeTotal-For"
+load 0
+app_global_put
+byte "For loop check done"
+log
+int 1
+b main_l29
+main_l15:
+load 0
+load 1
+gtxns Fee
++
+store 0
+load 1
+int 1
++
+store 1
+b main_l13
+main_l16:
+int 0
+store 1
+int 0
+store 0
+main_l17:
+load 1
+global GroupSize
+<
+bnz main_l19
+byte "FeeTotal-While"
+load 0
+app_global_put
+byte "While loop check done"
+log
+int 1
+b main_l29
+main_l19:
+load 0
+load 1
+gtxns Fee
++
+store 0
+load 1
+int 1
++
+store 1
+b main_l17
+main_l20:
+itxn_begin
+int axfer
+itxn_field TypeEnum
+txna Assets 0
+itxn_field XferAsset
+txn Sender
+itxn_field AssetReceiver
+int 5
+itxn_field AssetAmount
+itxn_submit
+itxn_begin
+int axfer
+itxn_field TypeEnum
+txna Assets 0
+itxn_field XferAsset
+txna Accounts 1
+itxn_field AssetReceiver
+int 3
+itxn_field AssetAmount
+itxn_submit
+byte "Inner asset xfer done"
+log
+int 1
+b main_l29
+main_l21:
+itxn_begin
+int axfer
+itxn_field TypeEnum
+txna Assets 0
+itxn_field XferAsset
+txn Sender
+itxn_field AssetReceiver
+int 5
+itxn_field AssetAmount
+itxn_submit
+byte "Inner asset xfer done"
+log
+int 1
+b main_l29
+main_l22:
+itxn_begin
+int axfer
+itxn_field TypeEnum
+txna Assets 0
+itxn_field XferAsset
+global CurrentApplicationAddress
+itxn_field AssetReceiver
+int 0
+itxn_field AssetAmount
+itxn_submit
+byte "Inner asset optin done"
+log
+int 1
+b main_l29
+main_l23:
+itxn_begin
+int acfg
+itxn_field TypeEnum
+byte "htty"
+itxn_field ConfigAssetName
+byte "HTTY"
+itxn_field ConfigAssetUnitName
+int 10000000
+itxn_field ConfigAssetTotal
+int 3
+itxn_field ConfigAssetDecimals
+byte "https://google.com/"
+itxn_field ConfigAssetURL
+global CurrentApplicationAddress
+itxn_field ConfigAssetManager
+global CurrentApplicationAddress
+itxn_field ConfigAssetReserve
+global CurrentApplicationAddress
+itxn_field ConfigAssetFreeze
+global CurrentApplicationAddress
+itxn_field ConfigAssetClawback
+itxn_submit
+byte "Created Asset"
+itxn CreatedAssetID
+app_global_put
+byte "Inner asset creation done"
+log
+int 1
+b main_l29
+main_l24:
+itxn_begin
+int pay
+itxn_field TypeEnum
+txn Sender
+itxn_field Receiver
+int 3000000
+itxn_field Amount
+itxn_submit
+byte "Inner payment done"
+log
+int 1
+b main_l29
+main_l25:
+int 1
+b main_l29
+main_l26:
+int 1
+b main_l29
+main_l27:
+int 1
+b main_l29
+main_l28:
+int 1
+main_l29:
+return
